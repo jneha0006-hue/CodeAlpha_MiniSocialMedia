@@ -43,4 +43,5 @@ A mini social media web application built using Django, HTML, CSS, and SQLite.
 
 ## Author
 
-Krish Khantwal
+Neha Joshi
+
