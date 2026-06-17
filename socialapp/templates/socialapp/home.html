@@ -1,0 +1,125 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Mini Social Media Platform</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        margin: 0;
+      }
+
+      .navbar {
+        background: #2b78e4;
+        color: white;
+        text-align: center;
+        padding: 20px;
+        font-size: 30px;
+      }
+
+      .container {
+        width: 80%;
+        margin: 30px auto;
+      }
+
+      .card {
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .btn {
+        background: #2b78e4;
+        color: white;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+      }
+
+      button {
+        padding: 8px 15px;
+        margin-top: 5px;
+      }
+
+      input {
+        padding: 8px;
+        width: 250px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="navbar">Mini Social Media Platform</div>
+
+    <div class="container">
+      <div class="card">
+        <h1>Welcome {{ user.username }} 👋</h1>
+
+        <a href="/create-post/" class="btn"> Create Post </a>
+      </div>
+
+      <h2>Posts</h2>
+
+      {% for post in posts %}
+
+      <div class="card">
+        <h3>{{ post.user.username }}</h3>
+
+        {% if user != post.user %}
+        <form action="/follow/{{ post.user.id }}/" method="POST">
+          {% csrf_token %}
+          <button type="submit">Follow</button>
+        </form>
+
+        <p>Followers: {{ post.user.followers.count }}</p>
+        {% endif %}
+
+        <p>{{ post.content }}</p>
+
+        <small>{{ post.created_at }}</small>
+
+        <br /><br />
+
+        <form action="/like/{{ post.id }}/" method="POST">
+          {% csrf_token %}
+          <button type="submit">❤️ Like</button>
+        </form>
+
+        <p>Likes: {{ post.like_set.count }}</p>
+
+        <hr />
+
+        <form action="/comment/{{ post.id }}/" method="POST">
+          {% csrf_token %}
+
+          <input type="text" name="text" placeholder="Write a comment" />
+
+          <button type="submit">Comment</button>
+        </form>
+
+        <br />
+
+        {% for comment in post.comment_set.all %}
+
+        <p><b>{{ comment.user.username }}</b>: {{ comment.text }}</p>
+
+        {% empty %}
+
+        <p>No comments yet.</p>
+
+        {% endfor %}
+      </div>
+
+      {% empty %}
+
+      <div class="card">
+        <p>No posts yet.</p>
+      </div>
+
+      {% endfor %}
+    </div>
+  </body>
+</html>
